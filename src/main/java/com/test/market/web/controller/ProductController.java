@@ -1,8 +1,11 @@
 package com.test.market.web.controller;
 
+import com.test.market.domain.Category;
 import com.test.market.domain.Product;
 import com.test.market.domain.service.ProductServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,28 +19,39 @@ public class ProductController {
     private ProductServices productServices;
 
     @GetMapping("/Product/allProd")
-    public List<Product> getAll(){
-        return productServices.getAll();
+    public ResponseEntity<List<Product>> getAll(){
+        return new ResponseEntity<>(productServices.getAll(), HttpStatus.OK);
     }
 
     @GetMapping("/Product/prodId={productId}")
-    public Optional<Product> getProduct(@PathVariable("productId") int productId){
-        return productServices.getProduct(productId);
+    public ResponseEntity<Product> getProduct(@PathVariable("productId") int productId){
+        return productServices.getProduct(productId)
+                .map( product -> new ResponseEntity<>(product,HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/Category/cateId={categoryId}")
-    public Optional<List<Product>> getByCategory(@PathVariable("categoryId") int categoryId){
-        return productServices.getByCategory(categoryId);
+    public ResponseEntity<List<Product>> getByCategory(@PathVariable("categoryId") int categoryId){
+        List<Product> products = productServices.getByCategory(categoryId).orElse(null);
+
+        return products != null && !products.isEmpty() ?
+                new ResponseEntity<>(products, HttpStatus.OK)
+                : new ResponseEntity<List<Product>>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/Product/save")
-    public Product save(@RequestBody Product product){
-        return productServices.save(product);
+    public ResponseEntity<Product> save(@RequestBody Product product){
+
+        return new ResponseEntity<>(productServices.save(product),HttpStatus.CREATED);
     }
 
     @DeleteMapping("/Product/deleteId={productId}")
-    public boolean delete(@PathVariable("productId") int productId){
-        return productServices.delete(productId);
+    public ResponseEntity delete(@PathVariable("productId") int productId){
+        if(productServices.delete(productId)){
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 }
