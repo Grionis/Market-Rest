@@ -7,3 +7,4 @@ SpringBoot project for test API REST
 - REST
 - Gradle
 - Postgresql
+- Swagger
