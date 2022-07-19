@@ -28,15 +28,14 @@ public class Compra {
     private String comentario;
 
     @Column(name = "estado")
-    private Boolean estado;
+    private String estado;
 
     @ManyToOne
     @JoinColumn(name = "id_cliente", insertable = false, updatable = false)
     private Cliente cliente;
 
-    @OneToMany(mappedBy = "compra")
-    private List<CompraProducto> compraProductos;
-
+    @OneToMany(mappedBy = "producto", cascade = {CascadeType.ALL})
+    private List<CompraProducto> productos;
 
     public Integer getIdCompra() {
         return idCompra;
@@ -78,11 +77,27 @@ public class Compra {
         this.comentario = comentario;
     }
 
-    public Boolean getEstado() {
+    public String getEstado() {
         return estado;
     }
 
-    public void setEstado(Boolean estado) {
+    public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public List<CompraProducto> getProductos() {
+        return productos;
+    }
+
+    public void setProductos(List<CompraProducto> productos) {
+        this.productos = productos;
     }
 }
