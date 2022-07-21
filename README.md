@@ -8,3 +8,5 @@ SpringBoot project for test API REST
 - Gradle
 - Postgresql
 - Swagger
+- SpringSecurity
+- JWT
