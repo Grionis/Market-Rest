@@ -10,3 +10,4 @@ SpringBoot project for test API REST
 - Swagger
 - SpringSecurity
 - JWT
+- HEROKU
